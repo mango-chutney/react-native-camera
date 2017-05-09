@@ -243,6 +243,16 @@ export default class Camera extends Component {
     return CameraManager.getFOV();
   }
 
+  getViewFinderDimensions() {
+    if (Platform.OS === 'android') {
+      const props = convertNativeProps(this.props);
+      return CameraManager.getViewFinderDimensions({
+        type: props.type
+      });
+    }
+    return CameraManager.getViewFinderDimensions();
+  }
+
   hasFlash() {
     if (Platform.OS === 'android') {
       const props = convertNativeProps(this.props);

@@ -667,6 +667,15 @@ public class RCTCameraModule extends ReactContextBaseJavaModule
         promise.resolve(null != flashModes && !flashModes.isEmpty());
     }
 
+    @ReactMethod
+    public void getViewFinderDimensions(ReadableMap options, final Promise promise) {
+        RCTCamera instance = RCTCamera.getInstance();
+        WritableNativeMap dimensions = new WritableNativeMap();
+        dimensions.putInt("width", instance.getPreviewWidth(options.getInt("type")));
+        dimensions.putInt("height", instance.getPreviewHeight(options.getInt("type")));
+        promise.resolve(dimensions);
+    }
+
     private File getOutputMediaFile(int type) {
         // Get environment directory type id from requested media type.
         String environmentDirectoryType;
