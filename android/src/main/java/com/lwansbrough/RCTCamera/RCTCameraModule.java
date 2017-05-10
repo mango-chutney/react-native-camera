@@ -540,6 +540,12 @@ public class RCTCameraModule extends ReactContextBaseJavaModule
             RCTCamera.getInstance().setCaptureQuality(options.getInt("type"), options.getString("quality"));
         }
 
+        final Boolean shouldMirror = options.hasKey("mirrorImage") && options.getBoolean("mirrorImage");
+
+        final Boolean stopPreviewAfterCapture =
+                options.hasKey("stopPreviewAfterCapture")
+                && options.getBoolean("stopPreviewAfterCapture");
+
         RCTCamera.getInstance().adjustCameraRotationToDeviceOrientation(options.getInt("type"), deviceOrientation);
         camera.setPreviewCallback(null);
 
@@ -547,7 +553,7 @@ public class RCTCameraModule extends ReactContextBaseJavaModule
             @Override
             public void onPictureTaken(final byte[] data, Camera camera) {
                 camera.stopPreview();
-                camera.startPreview();
+                if (!stopPreviewAfterCapture) { camera.startPreview(); }
 
                 AsyncTask.execute(new Runnable() {
                     @Override

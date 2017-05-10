@@ -219,6 +219,7 @@ export default class Camera extends Component {
       title: '',
       description: '',
       mirrorImage: props.mirrorImage,
+      stopPreviewAfterCapture: props.stopPreviewAfterCapture,
       ...options
     };
 
@@ -241,16 +242,6 @@ export default class Camera extends Component {
 
   getFOV() {
     return CameraManager.getFOV();
-  }
-
-  getViewFinderDimensions() {
-    if (Platform.OS === 'android') {
-      const props = convertNativeProps(this.props);
-      return CameraManager.getViewFinderDimensions({
-        type: props.type
-      });
-    }
-    return CameraManager.getViewFinderDimensions();
   }
 
   startPreview() {
