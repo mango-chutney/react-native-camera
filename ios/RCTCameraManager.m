@@ -289,6 +289,10 @@ RCT_CUSTOM_VIEW_PROPERTY(mirrorImage, BOOL, RCTCamera) {
   self.mirrorImage = [RCTConvert BOOL:json];
 }
 
+RCT_CUSTOM_VIEW_PROPERTY(stopPreviewAfterCapture, BOOL, RCTCamera) {
+    self.stopPreviewAfterCapture = [RCTConvert BOOL:json];
+}
+
 RCT_CUSTOM_VIEW_PROPERTY(barCodeTypes, NSArray, RCTCamera) {
   self.barCodeTypes = [RCTConvert NSArray:json];
 }
@@ -415,6 +419,20 @@ RCT_EXPORT_METHOD(getFOV:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejec
 RCT_EXPORT_METHOD(hasFlash:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     AVCaptureDevice *device = [self.videoCaptureDeviceInput device];
     resolve(@(device.hasFlash));
+}
+
+RCT_EXPORT_METHOD(startPreview:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    if (![self.session isRunning]) {
+        [self.session startRunning];
+    }
+    resolve();
+}
+
+RCT_EXPORT_METHOD(stopPreview:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    if ([self.session isRunning]) {
+        [self.session stopRunning];
+    }
+    resolve();
 }
 
 - (void)startSession {
@@ -585,6 +603,8 @@ RCT_EXPORT_METHOD(hasFlash:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRej
       [[self.stillImageOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:orientation];
 
       [self.stillImageOutput captureStillImageAsynchronouslyFromConnection:[self.stillImageOutput connectionWithMediaType:AVMediaTypeVideo] completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
+
+          if (self.stopPreviewAfterCapture && [self.session isRunning]) { [self.session stopRunning]; }
 
         if (imageDataSampleBuffer) {
           NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];

@@ -71,6 +71,7 @@ typedef NS_ENUM(NSInteger, RCTCameraTorchMode) {
 @property (nonatomic, assign) NSInteger videoTarget;
 @property (nonatomic, assign) NSInteger orientation;
 @property (nonatomic, assign) BOOL mirrorImage;
+@property (nonatomic, assign) BOOL stopPreviewAfterCapture;
 @property (nonatomic, strong) NSArray* barCodeTypes;
 @property (nonatomic, strong) RCTPromiseResolveBlock videoResolve;
 @property (nonatomic, strong) RCTPromiseRejectBlock videoReject;
@@ -82,6 +83,8 @@ typedef NS_ENUM(NSInteger, RCTCameraTorchMode) {
 - (void)capture:(NSDictionary*)options resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
 - (void)getFOV:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
 - (void)hasFlash:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
+- (void)startPreview:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
+- (void)stopPreview:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
 - (void)initializeCaptureSessionInput:(NSString*)type;
 - (void)stopCapture;
 - (void)startSession;
