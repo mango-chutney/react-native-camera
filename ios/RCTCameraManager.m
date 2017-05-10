@@ -425,14 +425,14 @@ RCT_EXPORT_METHOD(startPreview:(RCTPromiseResolveBlock)resolve reject:(RCTPromis
     if (![self.session isRunning]) {
         [self.session startRunning];
     }
-    resolve();
+    resolve(nil);
 }
 
 RCT_EXPORT_METHOD(stopPreview:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     if ([self.session isRunning]) {
         [self.session stopRunning];
     }
-    resolve();
+    resolve(nil);
 }
 
 - (void)startSession {

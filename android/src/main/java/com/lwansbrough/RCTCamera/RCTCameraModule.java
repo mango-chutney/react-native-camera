@@ -654,14 +654,14 @@ public class RCTCameraModule extends ReactContextBaseJavaModule
     public void startPreview(ReadableMap options, final Promise promise) {
         Camera camera = RCTCamera.getInstance().acquireCameraInstance(options.getInt("type"));
         camera.startPreview();
-        promise.resolve()
+        promise.resolve(null);
     }
 
     @ReactMethod
     public void stopPreview(ReadableMap options, final Promise promise) {
         Camera camera = RCTCamera.getInstance().acquireCameraInstance(options.getInt("type"));
         camera.stopPreview();
-        promise.resolve()
+        promise.resolve(null);
     }
 
     @ReactMethod
