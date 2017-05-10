@@ -526,6 +526,10 @@ public class RCTCameraModule extends ReactContextBaseJavaModule
 
         final Boolean shouldMirror = options.hasKey("mirrorImage") && options.getBoolean("mirrorImage");
 
+        final Boolean stopPreviewAfterCapture =
+                options.hasKey("stopPreviewAfterCapture")
+                && options.getBoolean("stopPreviewAfterCapture");
+
         RCTCamera.getInstance().adjustCameraRotationToDeviceOrientation(options.getInt("type"), deviceOrientation);
         camera.setPreviewCallback(null);
 
@@ -533,7 +537,7 @@ public class RCTCameraModule extends ReactContextBaseJavaModule
             @Override
             public void onPictureTaken(final byte[] data, Camera camera) {
                 camera.stopPreview();
-                camera.startPreview();
+                if (!stopPreviewAfterCapture) { camera.startPreview(); }
 
                 AsyncTask.execute(new Runnable() {
                     @Override
@@ -677,15 +681,6 @@ public class RCTCameraModule extends ReactContextBaseJavaModule
         }
         List<String> flashModes = camera.getParameters().getSupportedFlashModes();
         promise.resolve(null != flashModes && !flashModes.isEmpty());
-    }
-
-    @ReactMethod
-    public void getViewFinderDimensions(ReadableMap options, final Promise promise) {
-        RCTCamera instance = RCTCamera.getInstance();
-        WritableNativeMap dimensions = new WritableNativeMap();
-        dimensions.putInt("width", instance.getPreviewWidth(options.getInt("type")));
-        dimensions.putInt("height", instance.getPreviewHeight(options.getInt("type")));
-        promise.resolve(dimensions);
     }
 
     private File getOutputMediaFile(int type) {
