@@ -647,6 +647,18 @@ public class RCTCameraModule extends ReactContextBaseJavaModule
     }
 
     @ReactMethod
+    public void startPreview(ReadableMap options, final Promise promise) {
+        Camera camera = RCTCamera.getInstance().acquireCameraInstance(options.getInt("type"));
+        camera.startPreview();
+    }
+
+    @ReactMethod
+    public void stopPreview(ReadableMap options, final Promise promise) {
+        Camera camera = RCTCamera.getInstance().acquireCameraInstance(options.getInt("type"));
+        camera.stopPreview();
+    }
+
+    @ReactMethod
     public void stopCapture(final Promise promise) {
         if (mRecordingPromise != null) {
             releaseMediaRecorder(); // release the MediaRecorder object
