@@ -253,6 +253,28 @@ export default class Camera extends Component {
     return CameraManager.getViewFinderDimensions();
   }
 
+  startPreview() {
+    if (Platform.OS === 'android') {
+      const props = convertNativeProps(this.props);
+      return CameraManager.startPreview({
+        type: props.type
+      });
+    }
+
+    return CameraManager.startPreview();
+  }
+
+  stopPreview() {
+    if (Platform.OS === 'android') {
+      const props = convertNativeProps(this.props);
+      return CameraManager.stopPreview({
+        type: props.type
+      });
+    }
+
+    return CameraManager.stopPreview();
+  }
+
   hasFlash() {
     if (Platform.OS === 'android') {
       const props = convertNativeProps(this.props);
