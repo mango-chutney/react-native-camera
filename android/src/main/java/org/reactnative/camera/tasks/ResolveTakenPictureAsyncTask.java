@@ -11,6 +11,7 @@ import android.util.Base64;
 
 import org.reactnative.camera.RNCameraViewHelper;
 import org.reactnative.camera.utils.RNFileUtils;
+import org.reactnative.camera.utils.ViewFinderLayout;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -31,13 +32,15 @@ public class ResolveTakenPictureAsyncTask extends AsyncTask<Void, Void, Writable
     private File mCacheDirectory;
     private Bitmap mBitmap;
     private PictureSavedDelegate mPictureSavedDelegate;
+    private ViewFinderLayout mViewFinderLayout;
 
-    public ResolveTakenPictureAsyncTask(byte[] imageData, Promise promise, ReadableMap options, File cacheDirectory, PictureSavedDelegate delegate) {
+    public ResolveTakenPictureAsyncTask(byte[] imageData, Promise promise, ReadableMap options, File cacheDirectory, PictureSavedDelegate delegate, ViewFinderLayout viewFinderLayout) {
         mPromise = promise;
         mOptions = options;
         mImageData = imageData;
         mCacheDirectory = cacheDirectory;
         mPictureSavedDelegate = delegate;
+        mViewFinderLayout = viewFinderLayout;
     }
 
     private int getQuality() {
@@ -98,6 +101,10 @@ public class ResolveTakenPictureAsyncTask extends AsyncTask<Void, Void, Writable
 
                 if (mOptions.hasKey("mirrorImage") && mOptions.getBoolean("mirrorImage")) {
                     mBitmap = flipHorizontally(mBitmap);
+                }
+
+                if (mOptions.hasKey("cropToPreview") && mOptions.getBoolean("cropToPreview")) {
+                    mBitmap = cropToPreview(mBitmap, mViewFinderLayout);
                 }
 
                 // Write Exif data to the response if requested
@@ -172,6 +179,16 @@ public class ResolveTakenPictureAsyncTask extends AsyncTask<Void, Void, Writable
         Matrix matrix = new Matrix();
         matrix.preScale(-1.0f, 1.0f);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
+
+    // This assumes that the source and preview have the same aspect ratio.
+    private Bitmap cropToPreview(Bitmap source, ViewFinderLayout viewFinderLayout) {
+        float ratio = (float) source.getWidth() / viewFinderLayout.getWidth();
+        int width = (int) Math.round(viewFinderLayout.getWidth() * ratio);
+        int height = (int) Math.round(viewFinderLayout.getHeight() * ratio);
+        int x = Math.abs((int) Math.round(viewFinderLayout.getPaddingX() * ratio));
+        int y = Math.abs((int) Math.round(viewFinderLayout.getPaddingY() * ratio));
+        return Bitmap.createBitmap(source, x, y, width, height);
     }
 
     // Get rotation degrees from Exif orientation enum

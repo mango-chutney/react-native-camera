@@ -212,6 +212,18 @@ A string representing the camera ratio in the format 'height:width'. Default is 
 
 Use `getSupportedRatiosAsync` method to get ratio strings supported by your camera on Android.
 
+### `cropToPreview`
+
+Values: `true` (Boolean), `false` (default)
+
+If true, crop the image to the preview displayed in the viewfinder. This is useful if you want to create a square image or add an overlay. Implies `matchPreviewAspectRatio`.
+
+### `matchPreviewAspectRatio`
+
+Values: `true` (Boolean), `false` (default)
+
+Ensures that the aspect ratio of the captured image matches the one used by the viewfinder.
+
 #### `type`
 
 Values: `RNCamera.Constants.Type.front` or `RNCamera.Constants.Type.back` (default)

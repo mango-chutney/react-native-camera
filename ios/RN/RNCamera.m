@@ -340,15 +340,19 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
             UIImage *takenImage = [UIImage imageWithData:imageData];
 
             CGImageRef takenCGImage = takenImage.CGImage;
-            CGSize previewSize;
-            if (UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation])) {
+
+            // should this be [options[@"matchPreviewAspectRatio"] boolValue] ?
+            if ([options[@"cropToPreview"] boolValue]) {
+              CGSize previewSize;
+              if (UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation])) {
                 previewSize = CGSizeMake(self.previewLayer.frame.size.height, self.previewLayer.frame.size.width);
-            } else {
+              } else {
                 previewSize = CGSizeMake(self.previewLayer.frame.size.width, self.previewLayer.frame.size.height);
+              }
+              CGRect cropRect = CGRectMake(0, 0, CGImageGetWidth(takenCGImage), CGImageGetHeight(takenCGImage));
+              CGRect croppedSize = AVMakeRectWithAspectRatioInsideRect(previewSize, cropRect);
+              takenImage = [RNImageUtils cropImage:takenImage toRect:croppedSize];
             }
-            CGRect cropRect = CGRectMake(0, 0, CGImageGetWidth(takenCGImage), CGImageGetHeight(takenCGImage));
-            CGRect croppedSize = AVMakeRectWithAspectRatioInsideRect(previewSize, cropRect);
-            takenImage = [RNImageUtils cropImage:takenImage toRect:croppedSize];
 
             if ([options[@"mirrorImage"] boolValue]) {
                 takenImage = [RNImageUtils mirrorImage:takenImage];
