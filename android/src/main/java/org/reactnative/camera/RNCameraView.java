@@ -13,6 +13,7 @@ import android.view.View;
 import com.facebook.react.bridge.*;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.google.android.cameraview.CameraView;
+import com.google.android.cameraview.Size;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.text.TextBlock;
@@ -42,6 +43,7 @@ public class RNCameraView extends CameraView implements LifecycleEventListener, 
   private Promise mVideoRecordedPromise;
   private List<String> mBarCodeTypes = null;
   private Boolean mPlaySoundOnCapture = false;
+  private Size mViewFinderSize;
 
   private boolean mIsPaused = false;
   private boolean mIsNew = true;
@@ -90,7 +92,7 @@ public class RNCameraView extends CameraView implements LifecycleEventListener, 
             promise.resolve(null);
         }
         final File cacheDirectory = mPictureTakenDirectories.remove(promise);
-        new ResolveTakenPictureAsyncTask(data, promise, options, cacheDirectory, RNCameraView.this).execute();
+        new ResolveTakenPictureAsyncTask(data, promise, options, cacheDirectory, RNCameraView.this, mViewFinderSize).execute();
       }
 
       @Override
@@ -197,9 +199,9 @@ public class RNCameraView extends CameraView implements LifecycleEventListener, 
         correctHeight = (int) height;
       }
     }
-    int paddingX = (int) ((width - correctWidth) / 2);
-    int paddingY = (int) ((height - correctHeight) / 2);
-    preview.layout(paddingX, paddingY, correctWidth + paddingX, correctHeight + paddingY);
+
+    mViewFinderSize = new Size((int) width, (int) height);
+    preview.layout(0, 0, correctWidth, correctHeight);
   }
 
   @SuppressLint("all")
