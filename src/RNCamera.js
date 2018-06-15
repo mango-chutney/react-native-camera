@@ -42,6 +42,7 @@ type PictureOptions = {
   fixOrientation?: boolean,
   forceUpOrientation?: boolean,
   cropToPreview?: boolean,
+  pauseAfterCapture?: boolean,
 };
 
 type TrackedFaceFeature = FaceFeature & {
@@ -267,6 +268,10 @@ export default class Camera extends React.Component<PropsType, StateType> {
 
     if (options.cropToPreview === undefined) {
       options.cropToPreview = Platform.select({ android: false, ios: true });
+    }
+
+    if (options.pauseAfterCapture === undefined) {
+      options.pauseAfterCapture = false;
     }
 
     return await CameraManager.takePicture(options, this._cameraHandle);

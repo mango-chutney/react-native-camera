@@ -368,6 +368,8 @@ Supported options:
 
  - `cropToPreview` (boolean true or false).  If true, crop the image to the aspect ratio of the preview displayed in the viewfinder. This is useful if you want to create an image of a particular size (for example, a square) or add an overlay.  If no value is specified `cropToPreview:true` is used.
 
+ - `pauseAfterCapture` (boolean true or false).  If true, pause the preview layer immediately after capturing the image.  You will need to call `cameraRef.resumePreview()` before using the camera again. If no value is specified `pauseAfterCapture:false` is used.
+
 The promise will be fulfilled with an object with some of the following properties:
 
  - `width`: returns the image's width (taking image orientation into account)
